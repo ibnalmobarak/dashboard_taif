@@ -224,6 +224,65 @@
     background: rgba(247,243,234,.1); padding: 2px 7px; border-radius: 10px;
   }
 
+  /* ============ جداول الدرجات والتقرير التفصيلي ============ */
+  table.detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: center;
+  }
+  table.detail-table thead th {
+    position: sticky;
+    top: 0;
+    font-weight: 800;
+    font-size: 12.5px;
+    letter-spacing: .3px;
+    color: var(--cream);
+    background: linear-gradient(180deg, rgba(11,31,51,.98), rgba(11,31,51,.92));
+    border-bottom: 3px solid var(--teal);
+    padding: 11px 8px;
+    white-space: nowrap;
+    z-index: 2;
+  }
+  .panel.tone-gold table.detail-table thead th { border-bottom-color: var(--gold); }
+  .panel.tone-teal table.detail-table thead th { border-bottom-color: var(--teal-light); }
+
+  /* تمييز عامود المجموع الإجمالي */
+  table.detail-table th.total-col, table.detail-table td.total-col {
+    background: rgba(242, 177, 52, 0.18) !important;
+    color: var(--gold) !important;
+    font-weight: 900 !important;
+    font-size: 14.5px !important;
+    border-left: 1.5px solid rgba(242, 177, 52, 0.35);
+    border-right: 1.5px solid rgba(242, 177, 52, 0.35);
+  }
+
+  table.detail-table tbody td {
+    padding: 9px 8px;
+    border-bottom: 1px solid rgba(247,243,234,.08);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  table.detail-table tbody tr:nth-child(odd) { background: rgba(247,243,234,.03); }
+  table.detail-table tbody tr:hover { background: rgba(242,177,52,.1); }
+
+  /* المراكز الثلاثة الأولى */
+  table.detail-table tbody tr:nth-child(1) { background: rgba(242, 177, 52, 0.14); }
+  table.detail-table tbody tr:nth-child(2) { background: rgba(200, 205, 210, 0.08); }
+  table.detail-table tbody tr:nth-child(3) { background: rgba(205, 127, 50, 0.08); }
+
+  .medal-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border-radius: 50%;
+    font-weight: 900; font-size: 12px;
+    background: rgba(247,243,234,.1); color: var(--cream);
+  }
+  tr:nth-child(1) .medal-badge { background: rgba(242,177,52,.9); color: #241c00; }
+  tr:nth-child(2) .medal-badge { background: rgba(200,205,210,.85); color: #20242a; }
+  tr:nth-child(3) .medal-badge { background: rgba(205,127,50,.85); color: #2a1400; }
+
+  .name-col { font-weight: 800 !important; text-align: right !important; padding-right: 12px !important; color: var(--cream) !important; }
+
   /* ================= التذييل ================= */
   .foot{ display:flex; align-items:center; justify-content:center; gap:10px; margin-top:14px; color:var(--cream-dim); font-size:12px; font-weight:700; }
   .foot .clock{ color:var(--gold); font-weight:900; letter-spacing:.5px; }
@@ -258,31 +317,36 @@
     </div>
 
     <div class="dots" id="dots">
-      <div class="dot" data-idx="0"><div class="fill"></div></div>
+      <div class="dot active" data-idx="0"><div class="fill"></div></div>
       <div class="dot" data-idx="1"><div class="fill"></div></div>
+      <div class="dot" data-idx="2"><div class="fill"></div></div>
     </div>
 
     <div class="screens" id="screens">
-      <!-- الشاشة الأولى: النتائج -->
+      <!-- الشاشة الأولى: تقرير درجات المجموعات (تفصيلي بالبنود والمجموع) -->
       <div class="screen active" data-screen="0">
         <div class="panel tone-gold" data-key="groups">
           <div class="panel-head">
-            <div class="title"><span class="badge">🏕️</span> نتائج المجموعات</div>
+            <div class="title"><span class="badge">🏕️</span> نتائج المجموعات التفصيلية (بالبنود والمجموع)</div>
             <div class="updated" data-updated>—</div>
           </div>
-          <div class="panel-body" data-body><div class="state-msg"><span class="icon">⏳</span> جارِ تحميل النتائج…</div></div>
-        </div>
-        <div class="panel tone-teal" data-key="students">
-          <div class="panel-head">
-            <div class="title"><span class="badge">🧑‍🎓</span> نتائج الطلاب</div>
-            <div class="updated" data-updated>—</div>
-          </div>
-          <div class="panel-body" data-body><div class="state-msg"><span class="icon">⏳</span> جارِ تحميل النتائج…</div></div>
+          <div class="panel-body" data-body><div class="state-msg"><span class="icon">⏳</span> جارِ تحميل نتائج المجموعات…</div></div>
         </div>
       </div>
 
-      <!-- الشاشة الثانية: البرنامج -->
+      <!-- الشاشة الثانية: تقرير درجات الطلاب (تفصيلي بالبنود والمجموع) -->
       <div class="screen" data-screen="1">
+        <div class="panel tone-teal" data-key="students">
+          <div class="panel-head">
+            <div class="title"><span class="badge">🧑‍🎓</span> نتائج الطلاب الفردية التفصيلية (بالبنود والمجموع)</div>
+            <div class="updated" data-updated>—</div>
+          </div>
+          <div class="panel-body" data-body><div class="state-msg"><span class="icon">⏳</span> جارِ تحميل نتائج الطلاب…</div></div>
+        </div>
+      </div>
+
+      <!-- الشاشة الثالثة: جدول البرامج -->
+      <div class="screen" data-screen="2">
         <div class="panel tone-high" data-key="high">
           <div class="panel-head">
             <div class="title"><span class="badge">⛰️</span> برنامج المرحلة الثانوية</div>
@@ -310,10 +374,6 @@
 <script>
 /* =======================================================================
    الإعدادات — عدّل معرّف الجدول أو رقم GID لأي علامة تبويب من هنا فقط
-   ملاحظة: تم ترتيب الـ GIDs المرسلة حسب ذكرها في الطلب:
-     1) درجات المجموعات   2) درجات الطلاب
-     3) برنامج الثانوية    4) برنامج المتوسطة
-   إن كان الترتيب مختلفاً، فقط بدّل قيم gid بين الأقسام أدناه.
    ======================================================================= */
 const CONFIG = {
   sheetId: '1oDET52fyptmXYHMFEc2HzoUFweLFFjpOSje3mftLaa8',
@@ -342,7 +402,7 @@ function fmtTime(d){
 
 /* ---------- استخراج اسم عمود النقاط والاسم تلقائياً ---------- */
 function findPointsKey(headers){
-  return headers.find(h => /نقط|درج|مجموع|رصيد|إجمالي|points|score/i.test(h)) || headers[headers.length-1];
+  return headers.find(h => /مجموع|إجمالي|نقط|درج|رصيد|points|score/i.test(h)) || headers[headers.length-1];
 }
 
 function findNameKey(headers, key){
@@ -376,54 +436,81 @@ function renderRankPanel(bodyEl, rows, key){
   }
 
   if(!filtered.length){
-    bodyEl.innerHTML = `<div class="state-msg"><span class="icon">📭</span> لا توجد بيانات بعد</div>`;
+    bodyEl.innerHTML = `<div class="state-msg"><span class="icon">📭</span> لا توجد بيانات مسجلة لهذا التصنيف</div>`;
     return;
   }
-  const headers = Object.keys(filtered[0]);
-  const nameKey = findNameKey(headers, key);
-  const pointsKey = findPointsKey(headers);
 
+  const rawHeaders = Object.keys(filtered[0] || {});
+  const headers = rawHeaders.filter(h => !/^group_id$/i.test(h.trim()));
+
+  const nameKey = findNameKey(headers, key);
+  const totalKey = headers.find(h => /مجموع|إجمالي|total/i.test(h)) || findPointsKey(headers);
+
+  // تجهيز وحساب إجمالي النقاط والفرز التنازلي
   const parsed = filtered
     .map(r => {
       const name = (r[nameKey] ?? '').toString().trim();
-      let points = 0;
-      if (pointsKey && r[pointsKey] !== undefined && String(r[pointsKey]).trim() !== '') {
-        points = parseFloat(String(r[pointsKey]).replace(/[^\d.\-]/g,'')) || 0;
+      let total = 0;
+      if (totalKey && r[totalKey] !== undefined && String(r[totalKey]).trim() !== '') {
+        total = parseFloat(String(r[totalKey]).replace(/[^\d.\-]/g,'')) || 0;
       } else {
-        // جمع القيم الرقمية إن لم يتوفر عامود إجمالي صريح
         headers.forEach(h => {
-          if (h !== nameKey && !/group_id|مرحلة|الترتيب/i.test(h)) {
-            points += parseFloat(String(r[h]).replace(/[^\d.\-]/g,'')) || 0;
+          if (h !== nameKey && !/مرحلة|الترتيب|المجموعة/i.test(h)) {
+            total += parseFloat(String(r[h]).replace(/[^\d.\-]/g,'')) || 0;
           }
         });
       }
-      const stage = (r['المرحلة'] ?? '').toString().trim();
-      return { name, points, stage };
+      return { row: r, name, total };
     })
-    .filter(r => r.name !== '')
-    .sort((a,b) => b.points - a.points);
+    .filter(item => item.name !== '')
+    .sort((a, b) => b.total - a.total);
 
   if(!parsed.length){
-    bodyEl.innerHTML = `<div class="state-msg"><span class="icon">📭</span> لا توجد بيانات بعد</div>`;
+    bodyEl.innerHTML = `<div class="state-msg"><span class="icon">📭</span> لا توجد بيانات مسجلة</div>`;
     return;
   }
 
-  const max = Math.max(1, ...parsed.map(r => r.points));
-  const medals = ['🥇','🥈','🥉'];
+  const medals = ['🥇', '🥈', '🥉'];
+  
+  // ترتيب الأعمدة: الاسم أولاً، ثم البنود، ثم المجموع النهائي
+  const otherCols = headers.filter(h => h !== nameKey && h !== totalKey);
+  const displayCols = [nameKey, ...otherCols, totalKey].filter(Boolean);
 
-  bodyEl.innerHTML = parsed.map((r,i) => `
-    <div class="rank-row">
-      <div class="rank-medal">${medals[i] || (i+1)}</div>
-      <div class="rank-main">
-        <div class="rank-name">
-          ${escapeHtml(r.name)}
-          ${currentStageFilter === 'all' && r.stage ? `<span class="rank-stage-badge">${escapeHtml(r.stage)}</span>` : ''}
-        </div>
-        <div class="rank-bar-track"><div class="rank-bar-fill" style="width:${Math.max(4,(r.points/max)*100)}%"></div></div>
-      </div>
-      <div class="rank-points">${r.points}<small>نقطة</small></div>
-    </div>
-  `).join('');
+  bodyEl.innerHTML = `
+    <table class="detail-table">
+      <thead>
+        <tr>
+          <th style="width: 46px;">الترتيب</th>
+          ${displayCols.map(col => {
+            const isTotal = (col === totalKey);
+            return `<th class="${isTotal ? 'total-col' : ''}">${escapeHtml(col)}</th>`;
+          }).join('')}
+        </tr>
+      </thead>
+      <tbody>
+        ${parsed.map((item, idx) => {
+          const rank = idx + 1;
+          const medal = medals[idx] || rank;
+          return `
+            <tr>
+              <td><span class="medal-badge">${medal}</span></td>
+              ${displayCols.map(col => {
+                const isTotal = (col === totalKey);
+                const isName = (col === nameKey);
+                let val = String(item.row[col] ?? '').trim();
+                if (!isName && !isTotal && col !== 'المرحلة' && col !== 'المجموعة' && val === '') {
+                  val = '0';
+                }
+                return `<td class="${isTotal ? 'total-col' : ''} ${isName ? 'name-col' : ''}">${escapeHtml(val)}</td>`;
+              }).join('')}
+            </tr>
+          `;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+
+  startAutoScroll(bodyEl);
 }
 
 function renderSchedulePanel(bodyEl, rows){
@@ -483,7 +570,7 @@ function renderPanel(key){
   }
 }
 
-/* ---------- سكرول تلقائي متوسط السرعة لجداول البرامج الطويلة ---------- */
+/* ---------- سكرول تلقائي متوسط السرعة للجداول ---------- */
 function startAutoScroll(el){
   if(el.dataset.autoScrolling) return; // لا نبدأ أكثر من حلقة واحدة لنفس العنصر
   el.dataset.autoScrolling = '1';
@@ -555,7 +642,7 @@ function loadAll(){
   Object.entries(CONFIG.sources).forEach(([key, cfg]) => loadSource(key, cfg));
 }
 
-/* ---------- التنقل التلقائي بين الشاشتين ---------- */
+/* ---------- التنقل التلقائي بين الشاشات ---------- */
 let activeScreen = 0;
 const screens = document.querySelectorAll('.screen');
 const dots = document.querySelectorAll('.dot');
