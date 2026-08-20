@@ -69,14 +69,22 @@
   .logo-pair .divider{ width:1px; height:46px; background:rgba(247,243,234,.25); }
 
   @media (max-width:820px){
-    .logo-sponsor{ width:52px; height:52px; top:10px; right:12px; }
-    .logo-pair{ top:8px; left:10px; gap:10px; }
-    .logo-pair img{ width:66px; }
-    .logo-pair .divider{ height:32px; }
+    .logo-sponsor{ width:48px; height:48px; top:10px; right:12px; }
+    .logo-pair{ top:10px; left:12px; gap:8px; }
+    .logo-pair img{ width:52px; }
+    .logo-pair .divider{ height:28px; }
+  }
+
+  @media (max-width:550px){
+    .stage{ padding:10px 8px 14px; }
+    .logo-sponsor{ width:38px; height:38px; top:8px; right:8px; }
+    .logo-pair{ top:8px; left:8px; gap:5px; }
+    .logo-pair img{ width:38px; }
+    .logo-pair .divider{ height:22px; }
   }
 
   /* ================= الترويسة ================= */
-  .head{ text-align:center; margin:0 auto 4px; max-width:720px; }
+  .head{ text-align:center; margin:0 auto 4px; max-width:720px; padding: 0 220px 0 100px; position: relative; z-index: 2; }
   .head .eyebrow{
     display:inline-flex; align-items:center; gap:8px;
     background:var(--cream-faint); border:1px solid rgba(242,177,52,.45);
@@ -85,12 +93,23 @@
   }
   .head h1{
     font-family:'Lalezar',system-ui,sans-serif; font-weight:400;
-    font-size:clamp(28px,4.2vw,44px); margin:0; letter-spacing:.5px;
+    font-size:clamp(22px,3.8vw,42px); margin:0; letter-spacing:.5px;
     background:linear-gradient(90deg,var(--gold),var(--orange) 60%,var(--teal-light));
     -webkit-background-clip:text; background-clip:text; color:transparent;
     text-shadow:0 4px 24px rgba(224,121,58,.25);
   }
-  .head .sub{ color:var(--cream-dim); font-weight:700; font-size:13.5px; margin-top:6px; }
+  .head .sub{ color:var(--cream-dim); font-weight:700; font-size:13.5px; margin-top:4px; }
+
+  @media (max-width:820px){
+    .head{ padding: 0 120px 0 60px; }
+    .head h1{ font-size: clamp(20px, 4.5vw, 26px); }
+  }
+
+  @media (max-width:550px){
+    .head{ padding: 0 90px 0 50px; }
+    .head h1{ font-size: 18px; line-height: 1.25; }
+    .head .sub{ font-size: 11px; margin-top: 2px; }
+  }
 
   /* مؤشرات التنقل بين الشاشتين */
   .dots{ display:flex; justify-content:center; gap:10px; margin:16px 0 4px; }
@@ -402,7 +421,9 @@ function fmtTime(d){
 
 /* ---------- استخراج اسم عمود النقاط والاسم تلقائياً ---------- */
 function findPointsKey(headers){
-  return headers.find(h => /مجموع|إجمالي|نقط|درج|رصيد|points|score/i.test(h)) || headers[headers.length-1];
+  return headers.find(h => /^المجموع$|^الإجمالي$|^إجمالي$|^total$/i.test(h.trim())) ||
+         headers.find(h => !/مجموعة/i.test(h) && /مجموع|إجمالي|points|score/i.test(h.trim())) ||
+         headers[headers.length-1];
 }
 
 function findNameKey(headers, key){
@@ -441,10 +462,11 @@ function renderRankPanel(bodyEl, rows, key){
   }
 
   const rawHeaders = Object.keys(filtered[0] || {});
-  const headers = rawHeaders.filter(h => !/^group_id$/i.test(h.trim()));
+  // استبعاد أعمدة الـ ID والترتيب السابق إن وجد
+  const headers = rawHeaders.filter(h => !/^(id|group_id|student_id|id_student|الترتيب)$/i.test(h.trim()));
 
   const nameKey = findNameKey(headers, key);
-  const totalKey = headers.find(h => /مجموع|إجمالي|total/i.test(h)) || findPointsKey(headers);
+  const totalKey = findPointsKey(headers);
 
   // تجهيز وحساب إجمالي النقاط والفرز التنازلي
   const parsed = filtered
@@ -472,9 +494,27 @@ function renderRankPanel(bodyEl, rows, key){
 
   const medals = ['🥇', '🥈', '🥉'];
   
-  // ترتيب الأعمدة: الاسم أولاً، ثم البنود، ثم المجموع النهائي
-  const otherCols = headers.filter(h => h !== nameKey && h !== totalKey);
-  const displayCols = [nameKey, ...otherCols, totalKey].filter(Boolean);
+  // تحديد مفاتيح الأعمدة الأساسية
+  const stageKey = headers.find(h => /^المرحلة$/i.test(h.trim()));
+  const groupKey = (key === 'students') ? headers.find(h => /^المجموعة$/i.test(h.trim())) : null;
+
+  // استبعاد المفاتيح المحجوزة من الأعمدة الفرعية (البنود)
+  const reservedKeys = [nameKey, stageKey, groupKey, totalKey].filter(Boolean);
+  const itemCols = headers.filter(h => !reservedKeys.includes(h));
+
+  // ترتيب الأعمدة:
+  // 1. الاسم (الطالب أو المجموعة)
+  // 2. المرحلة (إن وجدت)
+  // 3. المجموعة (للطلاب فقط، تأتي كعمود عادِي دون تلوين بارز)
+  // 4. البنود الفرعية
+  // 5. المجموع / الإجمالي (في نهاية الجدول حصراً باللون الذهبي البارز)
+  const displayCols = [
+    nameKey,
+    ...(stageKey ? [stageKey] : []),
+    ...(groupKey ? [groupKey] : []),
+    ...itemCols,
+    ...(totalKey ? [totalKey] : [])
+  ].filter(Boolean);
 
   bodyEl.innerHTML = `
     <table class="detail-table">
