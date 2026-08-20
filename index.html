@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <title>🏆 رحلة الطائف — مجمع القرآن الكريم</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="app-header">
+    <img src="assets/logos/bard-sayfak-logo.png" alt="برد صيفك" class="corner-badge">
+    <div class="header-badge">مجمع القرآن الكريم 🕌</div>
+    <h1>🏆 رحلة الطائف الختامية</h1>
+    <div class="subtitle">منافسات كأس التميز والإتقان</div>
+    <div class="quran-quote">﴿وَفِي ذَٰلِكَ فَلْيَتَنَافَسِ الْمُتَنَافِسُونَ﴾</div>
+    <div class="trip-logos-row">
+      <div class="trip-logo-item">
+        <img src="assets/logos/asnaa-atharak-logo-transparent.png" alt="اصنع أثرك — رحلة الطائف للمتوسطة">
+      </div>
+      <div class="trip-logo-item">
+        <img src="assets/logos/hemmah-logo-transparent.png" alt="همة — رحلة الطائف للثانوية">
+      </div>
+    </div>
+  </header>
+
+  <div class="container" id="container">
+    <div class="top-nav-bar">
+      <a href="results.html" class="nav-btn nav-btn-stats">📊 عرض لوحة الصدارة والإحصائيات</a>
+      <a href="board.html" class="nav-btn nav-btn-entry">🖥️ شاشة العرض المباشر</a>
+    </div>
+
+    <div class="supervisor-bar">
+      <label for="supervisorSelect">👤 المشرف المسؤول:</label>
+      <select id="supervisorSelect">
+        <option value="">-- اختر اسمك --</option>
+      </select>
+    </div>
+
+    <div id="breadcrumb" class="breadcrumb" style="display:none;"></div>
+    <div id="app"></div>
+
+    <div class="recent-section" id="recentSection" style="display:none;">
+      <h3>سجل النقاط الأخير ⏱️</h3>
+      <div id="recentList"></div>
+    </div>
+  </div>
+
+  <div id="modalRoot"></div>
+  <div id="toastRoot"></div>
+
+  <!-- سكربتات الواجهة المعيارية السريعة -->
+  <script src="js/config.js"></script>
+  <script src="js/services/storage.js"></script>
+  <script src="js/services/api.js"></script>
+  <script src="js/components/ui.js"></script>
+  <script src="js/pages/app.js"></script>
+</body>
+</html>
